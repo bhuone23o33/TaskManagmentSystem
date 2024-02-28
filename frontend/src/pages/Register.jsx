@@ -4,9 +4,14 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
-import { register, reset } from '../features/auth/authSlice.js';
+import { registerAdmin, reset } from '../features/auth/authSlice.js';
+import NotFoundPage from './NotFound.jsx';
+import { useParams } from 'react-router-dom';
 
 function Register() {
+    const { userType } = useParams();
+    // console.log(userType);
+    // console.log(userType);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -22,6 +27,8 @@ function Register() {
         if (isError) {
             toast.error(message);
         }
+
+
 
         // redirect if success
         if (isSuccess || user) {
@@ -48,20 +55,14 @@ function Register() {
             const userData = {
                 name, email, password
             }
-            dispatch(register(userData));
+            dispatch(registerAdmin(userData));
         }
-        // setFormData({
-        //     name: "",
-        //     email: "",
-        //     password: "",
-        //     confirmPassword: "",
-        // });
     };
     return (
         <>
             <div className="min-h-screen h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
                 <div className="bg-white shadow-md rounded-lg p-8 max-w-md  space-y-8">
-                    <h1 className="text-2xl font-bold text-center">Register</h1>
+                    <h1 className="text-2xl font-bold text-center">Register {userType}</h1>
                     <form onSubmit={handleSubmit} className="space-y-4 flex flex-col items-start justify-center w-full">
                         <div className="flex flex-col space-y-1 w-full">
                             <label className="form-control w-full max-w-xs">

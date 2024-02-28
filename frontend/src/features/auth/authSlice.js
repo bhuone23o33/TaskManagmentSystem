@@ -13,7 +13,7 @@ const initialState = {
 }
 
 // for register data to backend
-export const register = createAsyncThunk('auth/register', async (user, thunkAPI) => {
+export const registerAdmin = createAsyncThunk('auth/register', async (user, thunkAPI) => {
     try {
         return await authService.register(user);
     } catch (error) {
@@ -28,7 +28,7 @@ export const register = createAsyncThunk('auth/register', async (user, thunkAPI)
 })
 
 // for logout user 
-export const logout = createAsyncThunk('auth/logout', async () => {
+export const logoutAdmin = createAsyncThunk('auth/logout', async () => {
     await authService.logout();
 })
 
@@ -49,21 +49,21 @@ export const authSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(register.pending, (state) => {
+        builder.addCase(registerAdmin.pending, (state) => {
             state.isLoading = true
         })
-            .addCase(register.fulfilled, (state, action) => {
+            .addCase(registerAdmin.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
                 state.user = action.payload
             })
-            .addCase(register.rejected, (state, action) => {
+            .addCase(registerAdmin.rejected, (state, action) => {
                 state.isLoading = false
                 state.message = action.payload
                 state.isError = true
                 state.user = null
             })
-            .addCase(logout.fulfilled, (state) => {
+            .addCase(logoutAdmin.fulfilled, (state) => {
                 state.user = null
             })
     }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { logout, reset } from '../features/auth/authSlice.js'
+import { logoutAdmin, reset } from '../features/auth/authSlice.js'
 
 function Navbar() {
     const navigate = useNavigate();
@@ -9,7 +9,7 @@ function Navbar() {
     const { user } = useSelector(state => state.auth);
 
     const onLogout = () => {
-        dispatch(logout());
+        dispatch(logoutAdmin());
         dispatch(reset());
         navigate('/')
     }

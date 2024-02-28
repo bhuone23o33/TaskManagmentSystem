@@ -32,7 +32,8 @@ app.get('/', (req, res) => {
 // routes for admin
 app.use('/api/admin', require('./routes/AdminRoutes.js'));
 
-// routes for man
+// routes for manager
+app.use('/api/manager', require('./routes/ManagerRoutes.js'));
 
 
 
