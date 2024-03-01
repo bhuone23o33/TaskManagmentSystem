@@ -4,13 +4,11 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
-import { registerAdmin, reset } from '../features/auth/authSlice.js';
+import { registerManager, reset } from '../features/auth/authSlice.js';
 import NotFoundPage from './NotFound.jsx';
 import Spinner from '../components/Spinner.jsx';
-import { useParams } from 'react-router-dom';
 
-function Register() {
-    const { userType } = useParams();
+function RegisterManager() {
     // console.log(userType);
     // console.log(userType);
     const dispatch = useDispatch();
@@ -22,22 +20,23 @@ function Register() {
         confirmPassword: "",
     });
 
-    const { user, isLoading, isError, isSuccess, message } = useSelector(state => state.auth);
+    const { isLoading, isError, isManagerRegistered, message } = useSelector(state => state.auth);
 
     useEffect(() => {
         if (isError) {
             toast.error(message);
         }
 
-
-
         // redirect if success
-        if (isSuccess || user) {
+        if (isManagerRegistered) {
+            dispatch(reset());
+            toast.success('Manager Registered!!');
             navigate('/')
         }
 
+
         dispatch(reset());
-    }, [isError, isSuccess, user, navigate, dispatch, message])
+    }, [isError, isManagerRegistered, navigate, dispatch, message])
 
     const { name, email, password, confirmPassword } = formData;
     const handleChange = (event) => {
@@ -56,7 +55,7 @@ function Register() {
             const userData = {
                 name, email, password
             }
-            dispatch(registerAdmin(userData));
+            dispatch(registerManager(userData));
         }
     };
 
@@ -68,7 +67,7 @@ function Register() {
         <>
             <div className="min-h-screen h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
                 <div className="bg-white shadow-md rounded-lg p-8 max-w-md  space-y-8">
-                    <h1 className="text-2xl font-bold text-center">Register Admin</h1>
+                    <h1 className="text-2xl font-bold text-center">Register Manager</h1>
                     <form onSubmit={handleSubmit} className="space-y-4 flex flex-col items-start justify-center w-full">
                         <div className="flex flex-col space-y-1 w-full">
                             <label className="form-control w-full max-w-xs">
@@ -148,4 +147,4 @@ function Register() {
     )
 }
 
-export default Register
+export default RegisterManager

@@ -1,25 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../features/auth/authSlice.js';
+import { useNavigate } from "react-router-dom";
+import { AdminLogin, reset } from '../features/auth/authSlice.js';
+import { toast } from 'react-toastify';
+import Spinner from "../components/Spinner.jsx";
 
 function Login() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+
     const [formData, setFormData] = useState({
         role: "",
         email: "",
         password: "",
     });
-    const { user, isLoading, isError, message } = useSelector(state => state.auth);
-
-    const { role, email, password } = formData;
-
-
+    const { user, isLoading, isError, isSuccess, message } = useSelector(state => state.auth);
     const handleChange = (event) => {
         setFormData({
             ...formData,
             [event.target.name]: event.target.value,
         });
     };
+
+    useEffect(() => {
+        if (isError) {
+            toast.error(message);
+        }
+
+
+
+        // redirect if success
+        if (isSuccess || user) {
+            navigate('/')
+        }
+
+        dispatch(reset());
+    }, [isError, isSuccess, user, navigate, dispatch, message])
+
+    const { role, email, password } = formData;
+
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -28,15 +49,29 @@ function Login() {
             email,
             password
         }
-
-        dispatch(login(userData));
+        console.log(userData);
+        if (role == 'admin') {
+            dispatch(AdminLogin(userData));
+        }
+        else if (role == 'manager') {
+            // dispatch(ManagerLogin(userData));
+        }
+        else if (role == 'employee') {
+            // dispatch(EmployeeLogin(userData));
+        } else {
+            toast.error("Please select role");
+        }
     };
+
+    if (isLoading) {
+        return <Spinner />
+    }
 
 
     return (
         <>
             <div className="min-h-screen h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-                <div className="bg-white shadow-md rounded-lg p-8 max-w-md  space-y-8">
+                <div className="bg-white shadow-md rounded-lg p-8 w-auto  space-y-8">
                     <h1 className="text-2xl font-bold text-center">Login</h1>
                     <form onSubmit={handleSubmit} className="space-y-4 flex flex-col items-start justify-center w-full">
                         <div className="flex flex-col space-y-1 w-full">

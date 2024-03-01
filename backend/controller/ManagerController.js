@@ -45,10 +45,10 @@ const RegisterEmployee = asyncHandler(async (req, res) => {
     })
 
     if (employee) {
-        // res.status(201).json({
-        //     token: generateToken(employee._id)
-        // })
-        res.status(201).json(employee)
+        res.status(201).json({
+            token: generateToken(employee._id)
+        })
+        // res.status(201).json(employee)
     } else {
         res.status(400);
         throw new Error('Invalid credentials');
@@ -73,7 +73,7 @@ const LoginUser = asyncHandler(async (req, res) => {
         // res.status(200).json(manager);
     } else {
         res.status(400);
-        throw new Error('User does\'t exist!!');
+        throw new Error('Manager does\'t exist!!');
     }
 })
 

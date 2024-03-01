@@ -105,9 +105,10 @@ const LoginUser = asyncHandler(async (req, res) => {
         })
     } else {
         res.status(400);
-        throw new Error('User does\'t exist!!');
+        throw new Error('Admin does\'t exist!!');
     }
 })
+
 
 // generating token
 const generateToken = (id) => {
@@ -116,12 +117,32 @@ const generateToken = (id) => {
     })
 }
 
-// @desc   getting admin data
-// @route  /api/admin/getProject
+// @desc   getting managers Listings
+// @route  /api/admin/getManagers
 // @access  private 
 
-const GetProject = asyncHandler(async (req, res) => {
-    res.send('Project Data');
+const getManagers = asyncHandler(async (req, res) => {
+    // get the user using id in jwt
+    const admin = await Admin.findById(req.user.id);
+    if (!admin) {
+        res.status(401);
+        throw new Error('Admin not found');
+    }
+
+    const managers = await Manager.find({ adminId: req.user.id });
+    res.status(200).json(managers);
+})
+const deleteManager = asyncHandler(async (req, res) => {
+    // delete the user using id in jwt
+    // res.send('delete route' + `${req.params.id}`);
+    const admin = await Admin.findById(req.user.id);
+    if (!admin) {
+        res.status(401);
+        throw new Error('Admin not found');
+    }
+
+    await Manager.deleteOne({ _id: req.params.id });
+    res.status(200).send('Manager Deleted');
 })
 
 
@@ -130,5 +151,6 @@ module.exports = {
     RegisterUser,
     RegisterManager,
     LoginUser,
-    GetProject
+    getManagers,
+    deleteManager
 }

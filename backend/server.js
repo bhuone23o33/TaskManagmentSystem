@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 8000;
 
 app.use(cors({
     origin: 'http://localhost:5173', // Replace with your frontend origin
-    methods: ['GET', 'POST'], // Allowed methods (adjust as needed)
+    methods: ['GET', 'POST', 'DELETE'], // Allowed methods (adjust as needed)
 }));
 
 // to access the req.body(we set middleware here);
@@ -34,6 +34,9 @@ app.use('/api/admin', require('./routes/AdminRoutes.js'));
 
 // routes for manager
 app.use('/api/manager', require('./routes/ManagerRoutes.js'));
+
+// routes for employee
+app.use('/api/employee', require('./routes/EmployeeRoutes.js'))
 
 
 
