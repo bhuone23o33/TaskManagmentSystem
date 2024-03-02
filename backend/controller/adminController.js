@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Admin = require('../models/adminSchema.js');
 const Manager = require('../models/ManagerSchema.js');
+const Project = require('../models/ProjectSchema.js');
 // @desc   Register a user(admin)
 // @route  /api/users
 // @access  public 
@@ -132,6 +133,11 @@ const getManagers = asyncHandler(async (req, res) => {
     const managers = await Manager.find({ adminId: req.user.id });
     res.status(200).json(managers);
 })
+
+
+// @desc   deleting manager from Listing
+// @route  /api/admin/delManager/:id
+// @access  private 
 const deleteManager = asyncHandler(async (req, res) => {
     // delete the user using id in jwt
     // res.send('delete route' + `${req.params.id}`);
@@ -145,6 +151,66 @@ const deleteManager = asyncHandler(async (req, res) => {
     res.status(200).send('Manager Deleted');
 })
 
+// @desc   create project
+// @route  /api/admin/addProject
+// @access  private 
+const addProject = asyncHandler(async (req, res) => {
+
+    const { projectName, projectDescription, projectRequirements, projectDeadline, managerId, employeeId } = req.body;
+
+    // validations
+    if (!projectName || !projectDescription || !projectRequirements || !projectDeadline) {
+        res.status(400);
+        throw new Error('Please include all information');
+    }
+
+    // Get user(admin) id 
+    const admin = await Admin.findById(req.user.id);
+
+    if (!admin) {
+        throw new Error("User not found");
+    }
+
+    // create project
+    const project = await Project.create({
+        adminId: req.user.id,
+        projectName,
+        projectDescription,
+        projectRequirements,
+        projectDeadline,
+        managerId,
+        employeeId,
+    })
+
+    if (project) {
+        // res.status(201).json({
+        //     token: generateToken(manager._id)
+        // })
+        res.status(200).send('Successfully Created');
+    } else {
+        res.status(400);
+        throw new Error('Something Went Wrong');
+    }
+})
+// @desc   get project
+// @route  /api/admin/project/all
+// @access  private 
+const getProjects = asyncHandler(async (req, res) => {
+
+
+
+    // Get user(admin) id 
+    const admin = await Admin.findById(req.user.id);
+
+    if (!admin) {
+        throw new Error("User not found");
+    }
+
+    const projects = await Project.find({ adminId: req.user.id });
+
+    res.status(200).json(projects);
+})
+
 
 
 module.exports = {
@@ -152,5 +218,7 @@ module.exports = {
     RegisterManager,
     LoginUser,
     getManagers,
-    deleteManager
+    deleteManager,
+    addProject,
+    getProjects
 }

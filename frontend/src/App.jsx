@@ -6,6 +6,8 @@ import Navbar from './components/Navbar.jsx';
 import Register from './pages/Register.jsx';
 import RegisterManager from './pages/RegisterManager.jsx';
 import ManagerListings from './pages/ManagerListings.jsx';
+import AddProject from './pages/AddProject.jsx';
+import ProjectListings from './pages/ProjectListings.jsx';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
@@ -21,6 +23,8 @@ function App() {
           <Route path='/user/admin/register' element={<Register />} />
           <Route path='/user/manager/register' element={<RegisterManager />} />
           <Route path='/user/manager/all' element={<ManagerListings />} />
+          <Route path='/admin/addProject' element={<AddProject />} />
+          <Route path='/admin/project/all' element={<ProjectListings />} />
         </Routes>
       </Router>
       <ToastContainer />

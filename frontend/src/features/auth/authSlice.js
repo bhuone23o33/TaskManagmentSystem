@@ -10,6 +10,7 @@ const initialState = {
     isManagerRegistered: false,
     managers: [],
     isManager: false,
+    isDeleted: false,
     isLoading: false,
     isError: false,
     isSuccess: false,
@@ -110,6 +111,7 @@ export const authSlice = createSlice({
             state.isError = false
             state.isLoading = false
             state.isSuccess = false
+            state.isDeleted = false
             state.isManager = false
             state.message = ''
             state.managers = {}
@@ -163,7 +165,8 @@ export const authSlice = createSlice({
                 state.isLoading = true
             })
             .addCase(delManager.fulfilled, (state, action) => {
-                state.isLoading = false;
+                state.isLoading = false
+                state.isDeleted = true
 
                 // Find the index of the deleted manager and remove it from the managers array
                 const managersCopy = [...state.managers];
