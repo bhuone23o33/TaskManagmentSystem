@@ -8,10 +8,8 @@ import Spinner from '../components/Spinner.jsx';
 
 function ManagerListings() {
 
-    const { managers, isLoading, isManager, isDeleted, delMessage, isError, message } = useSelector(state => state.auth);
-    // const [data, isData] = useState(false);
-    // const [rstate, setRstate] = useState('Remove');
-    const [Managers, setManagers] = useState([]);
+    const { managers, isLoading, isManager, isError, message } = useSelector(state => state.auth);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -23,28 +21,19 @@ function ManagerListings() {
     }, [dispatch, isManager])
 
     useEffect(() => {
-        if (isManager) {
-            setManagers(managers);
+        if (isError) {
+            toast.error(message);
         }
-    }, [isManager, managers]);
-
-    useEffect(() => {
         dispatch(getManagers());
-    }, []);
+    }, [dispatch, isError, message]);
 
     const handleButtonClick = (id) => {
         dispatch(delManager(id));
-        if (isDeleted) {
-            const updatedManagers = managers.filter((manager) => manager._id !== id);
-            setManagers(updatedManagers);
-        }
     }
 
     if (isLoading) {
         return <Spinner />
     }
-    // console.log(Managers, managers);
-    // const filteredManagers = managers.filter(manager => manager._id !== id);
 
     return (
         <>
@@ -58,7 +47,7 @@ function ManagerListings() {
                     </tr>
                 </thead>
                 <tbody>
-                    {Managers.length > 0 && Managers.map((item, i) => (
+                    {managers.length > 0 && managers.map((item, i) => (
                         <tr key={item._id}>
                             <td className="px-4 py-2">{(i + 1)}</td>
                             <td className="px-4 py-2">{item.name}</td>

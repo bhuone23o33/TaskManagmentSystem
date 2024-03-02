@@ -13,8 +13,6 @@ const initialState = {
     isLoading: false,
     isError: false,
     isSuccess: false,
-    isDeleted: false,
-    delMessage: '',
     message: ''
 }
 
@@ -114,8 +112,6 @@ export const authSlice = createSlice({
             state.isSuccess = false
             state.isManager = false
             state.message = ''
-            state.delMessage = ''
-            state.isDeleted = false
             state.managers = {}
         }
     },
@@ -164,17 +160,21 @@ export const authSlice = createSlice({
             })
             // delete managers
             .addCase(delManager.pending, (state) => {
-                // state.isLoading = true
+                state.isLoading = true
             })
             .addCase(delManager.fulfilled, (state, action) => {
-                state.delMessage = action.payload
-                state.isDeleted = true
-                // state.isLoading = false
-                // state.isManager = true
-                // state.managers = action.payload
+                state.isLoading = false;
+
+                // Find the index of the deleted manager and remove it from the managers array
+                const managersCopy = [...state.managers];
+                const index = managersCopy.findIndex((manager) => manager._id === action.payload.managerId);
+                if (index !== -1) {
+                    managersCopy.splice(index, 1);
+                    state.managers = managersCopy;
+                }
             })
             .addCase(delManager.rejected, (state, action) => {
-                // state.isLoading = false
+                state.isLoading = false
                 state.message = action.payload
                 state.isError = true
             })

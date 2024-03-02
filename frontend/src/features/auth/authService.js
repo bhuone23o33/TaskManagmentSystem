@@ -72,11 +72,8 @@ const delManager = async (id, token) => {
 
     const response = await axios.delete(`${API_URL}/admin/delManager/${id}`, config);
 
-    // if (response.data) {
-    //     localStorage.setItem('manager', JSON.stringify(response.data));
-    // }
 
-    return response.data;
+    return { managerId: id, ...response.data };
 
 }
 
