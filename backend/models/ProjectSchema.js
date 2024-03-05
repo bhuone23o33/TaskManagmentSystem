@@ -1,5 +1,26 @@
 const mongoose = require('mongoose');
 
+
+// const managerSchema = new mongoose.Schema({
+//     managerId: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: 'Manager'
+//     },
+//     managerName: {
+//         type: String,
+//     },
+// })
+// const employeeSchema = new mongoose.Schema({
+//     employeeId: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: 'Employee' // Reference the employee model
+//     },
+//     employeeName: {
+//         type: String,
+//     },
+// })
+
+
 const ProjectSchema = mongoose.Schema({
     adminId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -20,13 +41,17 @@ const ProjectSchema = mongoose.Schema({
     },
     managerId: {
         type: mongoose.Schema.Types.ObjectId,
-        required: false,
-        ref: 'Manager' // Reference the Admin model
+        ref: 'Manager'
+    },
+    managerName: {
+        type: String,
     },
     employeeId: {
         type: mongoose.Schema.Types.ObjectId,
-        required: false,
-        ref: 'Employee' // Reference the Admin model
+        ref: 'Employee' // Reference the employee model
+    },
+    employeeName: {
+        type: String,
     },
     createdAt: {
         type: Date,

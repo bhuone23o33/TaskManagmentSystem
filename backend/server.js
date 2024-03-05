@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 8000;
 
 app.use(cors({
     origin: 'http://localhost:5173', // Replace with your frontend origin
-    methods: ['GET', 'POST', 'DELETE'], // Allowed methods (adjust as needed)
+    methods: ['GET', 'POST', 'DELETE', 'PUT'], // Allowed methods (adjust as needed)
 }));
 
 // to access the req.body(we set middleware here);

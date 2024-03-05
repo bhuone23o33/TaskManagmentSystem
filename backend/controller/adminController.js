@@ -156,12 +156,12 @@ const deleteManager = asyncHandler(async (req, res) => {
 // @access  private 
 const addProject = asyncHandler(async (req, res) => {
 
-    const { projectName, projectDescription, projectRequirements, projectDeadline, managerId, employeeId } = req.body;
+    const { projectName, projectDescription, projectRequirements, projectDeadline, managerId, managerName, employeeId, employeeName } = req.body;
 
     // validations
     if (!projectName || !projectDescription || !projectRequirements || !projectDeadline) {
         res.status(400);
-        throw new Error('Please include all information');
+        throw new Error(`Please include all information ${projectName}`);
     }
 
     // Get user(admin) id 
@@ -178,8 +178,8 @@ const addProject = asyncHandler(async (req, res) => {
         projectDescription,
         projectRequirements,
         projectDeadline,
-        managerId,
-        employeeId,
+        managerId, managerName,
+        employeeId, employeeName
     })
 
     if (project) {
@@ -212,6 +212,65 @@ const getProjects = asyncHandler(async (req, res) => {
 })
 
 
+// @desc   deleting Project from Listing
+// @route  /api/admin/delManager/:id
+// @access  private 
+const delProject = asyncHandler(async (req, res) => {
+    // delete the user using id in jwt
+    // res.send('delete route' + `${req.params.id}`);
+    const admin = await Admin.findById(req.user.id);
+    if (!admin) {
+        res.status(401);
+        throw new Error('Admin not found');
+    }
+
+    await Project.deleteOne({ _id: req.params.id });
+    res.status(200).send('Project Deleted');
+})
+
+
+// @desc   updating Project from Listing
+// @route  /api/admin/upManager/:id
+// @access  private 
+const upProject = asyncHandler(async (req, res) => {
+    // delete the user using id in jwt
+    // res.send('delete route' + `${req.params.id}`);
+    const admin = await Admin.findById(req.user.id);
+    if (!admin) {
+        res.status(401);
+        throw new Error('Admin not found');
+    }
+
+    // Find if project doesn't exist
+    const project = await Project.findById(req.params.id);
+    if (!project) {
+        res.status(400);
+        throw new Error('Project does not exist');
+    }
+
+    // Extract the update fields from the request body
+    const updateFields = {};
+    if (req.body.managerId) updateFields.managerId = req.body.managerId;
+    if (req.body.managerName) updateFields.managerName = req.body.managerName;
+    if (req.body.assignedAt) updateFields.assignedAt = req.body.assignedAt;
+
+    // Perform the update
+    const updatedProject = await Project.updateOne(
+        { _id: req.params.id },
+        { $set: updateFields }
+    );
+
+    // Check if the update was successful
+    if (updatedProject.modifiedCount === 0) {
+        res.status(400);
+        throw new Error('Failed to update the project');
+    }
+
+    res.status(200).json({ message: 'Project updated successfully', data: updatedProject });
+
+})
+
+
 
 module.exports = {
     RegisterUser,
@@ -220,5 +279,7 @@ module.exports = {
     getManagers,
     deleteManager,
     addProject,
-    getProjects
+    getProjects,
+    delProject,
+    upProject
 }
