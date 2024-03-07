@@ -12,6 +12,7 @@ function ManagerListings() {
 
     const { managers, isLoading, isManager, isDeleted, isError, message } = useSelector(state => state.auth);
     const [localManagers, setLocalManagers] = useState(managers);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         return () => {
@@ -57,12 +58,36 @@ function ManagerListings() {
         dispatch(delManager(id));
     }
 
+    // for searching
+    const handleSearch = () => {
+        if (searchQuery.trim()) {
+            const filteredManagers = managers.filter((manager) => manager.name.toLowerCase().includes(searchQuery.toLowerCase()));
+            setLocalManagers(filteredManagers);
+        } else {
+            setLocalManagers(managers);
+        }
+    }
+
+    useEffect(() => {
+        handleSearch();
+    }, [searchQuery]);
+
     if (isLoading) {
         return <Spinner />
     }
 
     return (
         <>
+            <div className="flex m-4">
+                <input
+                    type="text"
+                    placeholder="Search by Manager name"
+                    value={searchQuery}
+                    className="input input-bordered input-md w-full max-w-xs"
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
+            </div>
+
             <table className="table-auto w-full">
                 <thead>
                     <tr className="bg-gray-100 text-left">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import { AdminLogin, reset } from '../features/auth/authSlice.js';
+import { managerLogin, resetManager } from '../features/manager/managerSlice.js';
 import { toast } from 'react-toastify';
 import Spinner from "../components/Spinner.jsx";
 
@@ -16,6 +17,14 @@ function Login() {
         password: "",
     });
     const { user, isLoading, isError, isSuccess, message } = useSelector(state => state.auth);
+    const {
+        manager,
+        isLoadingManager,
+        isErrorManager,
+        isSuccessManager,
+        messageManager
+    } = useSelector(state => state.manager);
+
     const handleChange = (event) => {
         setFormData({
             ...formData,
@@ -24,19 +33,33 @@ function Login() {
     };
 
     useEffect(() => {
+        if (isSuccess || isSuccessManager) {
+            toast.success('Login Successfully!')
+        }
+    }, [isSuccess, isSuccessManager])
+
+    useEffect(() => {
         if (isError) {
             toast.error(message);
+        }
+
+        if (isErrorManager) {
+            toast.error(messageManager);
         }
 
 
 
         // redirect if success
-        if (isSuccess || user) {
+        if ((isSuccess || user) || (isSuccessManager || manager)) {
             navigate('/')
         }
 
-        dispatch(reset());
-    }, [isError, isSuccess, user, navigate, dispatch, message])
+        if (user) {
+            dispatch(reset());
+        } else if (manager) {
+            dispatch(resetManager());
+        }
+    }, [isError, isSuccess, user, navigate, dispatch, message, isErrorManager, isSuccessManager, manager])
 
     const { role, email, password } = formData;
 
@@ -54,16 +77,14 @@ function Login() {
             dispatch(AdminLogin(userData));
         }
         else if (role == 'manager') {
-            // dispatch(ManagerLogin(userData));
+            dispatch(managerLogin(userData));
         }
         else if (role == 'employee') {
             // dispatch(EmployeeLogin(userData));
-        } else {
-            toast.error("Please select role");
         }
     };
 
-    if (isLoading) {
+    if (isLoading || isLoadingManager) {
         return <Spinner />
     }
 

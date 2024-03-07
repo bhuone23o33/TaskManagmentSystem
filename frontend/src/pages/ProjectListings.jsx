@@ -15,6 +15,7 @@ function ProjectListings() {
 
     const { projects, isLoading, isError, isProjDeleted, isProjects, message } = useSelector(state => state.project);
     const [localProjects, setLocalProjects] = useState(projects);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         return () => {
@@ -59,6 +60,21 @@ function ProjectListings() {
         dispatch(delProject(id));
     }
 
+    // for searching
+    const handleSearch = () => {
+        if (searchQuery.trim()) {
+            const filteredProjects = projects.filter((project) => project.projectName.toLowerCase().includes(searchQuery.toLowerCase()));
+            setLocalProjects(filteredProjects);
+        } else {
+            setLocalProjects(projects);
+        }
+    }
+
+    // for search projects
+    useEffect(() => {
+        handleSearch();
+    }, [searchQuery]);
+
     if (isLoading) {
         return <Spinner />
     }
@@ -66,6 +82,15 @@ function ProjectListings() {
 
     return (
         <>
+            <div className="flex m-4">
+                <input
+                    type="text"
+                    placeholder="Search by Project name"
+                    value={searchQuery}
+                    className="input input-bordered input-md w-full max-w-xs"
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
+            </div>
             <table className="table-auto w-full">
                 <thead>
                     <tr className="bg-gray-100 text-left">
@@ -75,6 +100,7 @@ function ProjectListings() {
                         <th className="px-4 py-2">Requirements</th>
                         <th className="px-4 py-2">Manager Name</th>
                         <th className="px-4 py-2">Employee Name</th>
+                        {/* <th className="px-4 py-2">status</th> */}
                         <th className="px-4 py-2">Created At</th>
                         <th className="px-4 py-2">Assign At</th>
                         <th className="px-4 py-2">Project Deadline</th>
