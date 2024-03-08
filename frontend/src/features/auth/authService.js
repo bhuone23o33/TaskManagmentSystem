@@ -86,7 +86,6 @@ const logout = () => localStorage.removeItem('user');
 
 const authService = {
     register, logout, adminLogin, registerManager, getManagers, delManager
-    // register, logout, adminLogin, registerManager
 }
 
 // admin login

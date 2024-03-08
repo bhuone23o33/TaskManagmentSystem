@@ -38,7 +38,7 @@ const getEmployees = async (token) => {
     }
 
 
-    const response = await axios.get(`${API_URL}/admin/getManagers`, config);
+    const response = await axios.get(`${API_URL}/manager/getEmployees`, config);
 
     // if (response.data) {
     //     localStorage.setItem('manager', JSON.stringify(response.data));
@@ -56,7 +56,7 @@ const delEmployee = async (id, token) => {
     }
 
 
-    const response = await axios.delete(`${API_URL}/admin/delManager/${id}`, config);
+    const response = await axios.delete(`${API_URL}/manager/delEmployee/${id}`, config);
 
 
     return { managerId: id, ...response.data };
@@ -71,7 +71,7 @@ const delEmployee = async (id, token) => {
 const logout = () => localStorage.removeItem('manager');
 
 const managerService = {
-    logout, managerLogin, registerEmployee
+    logout, managerLogin, registerEmployee, getEmployees, delEmployee
 }
 
 // admin login

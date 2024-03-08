@@ -15,7 +15,7 @@ function AssignProject() {
     const navigate = useNavigate();
 
     const { managers, isManager, isError, message } = useSelector(state => state.auth);
-    const { isLoading, isAssign } = useSelector(state => state.project);
+    const { isAssign } = useSelector(state => state.project);
     const [selectedManager, setSelectedManager] = useState(null);
 
     useEffect(() => {
@@ -62,6 +62,7 @@ function AssignProject() {
             managerId: selectedManager._id,
             managerName: selectedManager.name,
             assignedAt: new Date(),
+            status: 'Not assign to Employee'
         }
         dispatch(assigningProject([project._id, projectData]));
         if (!isAssign) { navigate('/admin/project/all') }
@@ -71,7 +72,7 @@ function AssignProject() {
     }
     return (
         <div className="min-h-screen h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-            <div className="bg-white shadow-md rounded-lg p-8 max-w-md space-y-8">
+            <div className="bg-white shadow-md rounded-lg p-8 flex flex-col max-w-md space-y-8">
                 <h1 className="text-2xl font-bold text-center">Assign Project</h1>
                 <form onSubmit={handleSubmit} className="space-y-4 flex flex-col items-start justify-center w-full" required>
                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
@@ -93,27 +94,13 @@ function AssignProject() {
                                 <div className="label">
                                     <span className="label-text">Project Description</span>
                                 </div>
-                                <textarea
-                                    className="textarea textarea-bordered h-24"
-                                    placeholder="Project Description"
-                                    id="projectDescription"
-                                    name="projectDescription"
-                                    disabled
-                                    value={project?.projectDescription}
-                                ></textarea>
+                                <button className="btn btn-xs"><a href={project.projectDescription} target='_blank'>Desc</a></button>
                             </div>
                             <div className="form-control">
                                 <div className="label">
                                     <span className="label-text">Project Requirement</span>
                                 </div>
-                                <textarea
-                                    className="textarea textarea-bordered h-24"
-                                    placeholder="Project Requirement"
-                                    id="projectRequirements"
-                                    name="projectRequirements"
-                                    disabled
-                                    value={project?.projectRequirements}
-                                ></textarea>
+                                <button className="btn btn-xs"><a href={project.projectRequirements} target='_blank'>Req</a></button>
                             </div>
                         </div>
                         <div>
@@ -161,8 +148,8 @@ function AssignProject() {
                             </div>
                         </div>
                     </div>
-                    <button type="submit" className="btn btn-wide">
-                        Assign
+                    <button type="submit" className="btn mx-auto w-1/2">
+                        Assign Project
                     </button>
                 </form>
             </div >

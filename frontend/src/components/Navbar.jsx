@@ -72,7 +72,7 @@ function Navbar() {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to="/">
+                                    <Link to="/manager/employee/all">
                                         View Employees
                                     </Link>
                                 </li>
@@ -131,7 +131,7 @@ function Navbar() {
                             </li>
 
                             <li>
-                                <Link to="/">
+                                <Link to="/manager/employee/all">
                                     View Employees
                                 </Link>
                             </li>

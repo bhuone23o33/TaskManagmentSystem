@@ -8,6 +8,9 @@ import { createProject, reset1 } from '../features/Projects/projectSlice.js';
 import Spinner from '../components/Spinner.jsx';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { storage } from '../firebase/TaskConfig.js';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { v4 } from 'uuid';
 
 function AddProject() {
     // console.log(userType);
@@ -16,13 +19,19 @@ function AddProject() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         projectName: "",
-        projectDescription: "",
-        projectRequirements: "",
     });
+
+    const [uploadFile, setUploadFile] = useState(null);
+    const [uploadFile1, setUploadFile1] = useState(null);
+
+    const [projectReq, setProjectReq] = useState("");
+    const [projectReq1, setProjectReq1] = useState("");
 
     const [selectedDate, setSelectedDate] = useState(new Date());
 
-    const { projectName, projectDescription, projectRequirements } = formData;
+    const { projectName } = formData;
+
+    const [isUploading, setIsUploading] = useState(false);
 
 
 
@@ -49,32 +58,58 @@ function AddProject() {
             ...formData,
             [event.target.name]: event.target.value,
         });
+
+        if (event.target.name === 'projectDescription') {
+            setProjectReq1(event.target.files[0]);
+        } else if (event.target.name === 'projectRequirements') {
+            setProjectReq(event.target.files[0]);
+        }
     };
 
-    const handleSubmit = (event) => {
+
+
+
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const projectData = {
-            ...formData,
-            projectDeadline: selectedDate
+        try {
+            setIsUploading(true); // Set uploading state to true
+
+            // Upload both files and wait for URLs to be generated
+            const [descriptionUrl, requirementsUrl] = await Promise.all([
+                uploadFileToStorage(uploadFile1, 'Desc'),
+                uploadFileToStorage(uploadFile, 'Req')
+            ]);
+
+            const projectData = {
+                ...formData,
+                projectDescription: descriptionUrl,
+                projectRequirements: requirementsUrl,
+                projectDeadline: selectedDate
+            };
+
+            dispatch(createProject(projectData)); // Create project with updated data
+        } catch (error) {
+            console.error('Error submitting project:', error);
+            toast.error(error.message);
+        } finally {
+            setIsUploading(false); // Set uploading state to false
         }
-        // console.log(projectData);
-        dispatch(createProject(projectData));
     };
 
-    if (isLoading) {
+    if (isLoading || isUploading) {
         return <Spinner />
     }
 
     return (
-
         <div className="min-h-screen h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-            <div className="bg-white shadow-md rounded-lg p-8 max-w-md space-y-8">
+            <div className="bg-white shadow-md rounded-lg p-8 max-w-screen-md space-y-8">
                 <h1 className="text-2xl font-bold text-center">Add Project</h1>
-                <form onSubmit={handleSubmit} className="space-y-4 flex flex-col items-start justify-center w-full">
+                <form onSubmit={handleSubmit} className="space-y-4 w-full flex flex-col">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <div className="form-control w-full">
+                            <div className="form-control">
                                 <div className="label">
                                     <span className="label-text">Project Name</span>
                                 </div>
@@ -95,7 +130,7 @@ function AddProject() {
                                 <div className="label">
                                     <span className="label-text">Project Description</span>
                                 </div>
-                                <textarea
+                                {/* <textarea
                                     className="textarea textarea-bordered h-24"
                                     placeholder="Project Description"
                                     id="projectDescription"
@@ -103,7 +138,8 @@ function AddProject() {
                                     value={projectDescription}
                                     onChange={handleChange}
                                     required
-                                ></textarea>
+                                ></textarea> */}
+                                <input type="file" className="file-input file-input-bordered w-full " onChange={(e) => setUploadFile1(e.target.files[0])} required />
                             </div>
                         </div>
                     </div>
@@ -113,7 +149,7 @@ function AddProject() {
                                 <div className="label">
                                     <span className="label-text">Project Requirements</span>
                                 </div>
-                                <textarea
+                                {/* <textarea
                                     className="textarea textarea-bordered h-24"
                                     placeholder="Project Requirements"
                                     id="projectRequirements"
@@ -121,31 +157,41 @@ function AddProject() {
                                     value={projectRequirements}
                                     onChange={handleChange}
                                     required
-                                ></textarea>
+                                ></textarea> */}
+                                <input type="file" className="file-input file-input-bordered w-full " onChange={(e) => setUploadFile(e.target.files[0])} required />
                             </div>
                         </div>
                         <div>
-                            <div className="px-1">
-                                <label className='form-control'>
-                                    <div className="label">
-                                        Deadline Date
-                                    </div>
-                                    <DatePicker
-                                        selected={selectedDate}
-                                        onChange={(date) => setSelectedDate(date)}
-                                        className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    />
-                                </label>
+                            <div className="form-control w-full">
+                                <div className="label">
+                                    <span className="label-text">Deadline Date</span>
+                                </div>
+                                <DatePicker
+                                    selected={selectedDate}
+                                    onChange={(date) => setSelectedDate(date)}
+                                    required
+                                    className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                />
                             </div>
                         </div>
                     </div>
-                    <button type="submit" className="btn btn-wide">
+                    {/* <button type="submit" className="btn w-1/2">
+                        Add Project
+                    </button> */}
+                    <button type="submit" className="btn mx-auto w-1/2">
                         Add Project
                     </button>
                 </form>
             </div>
         </div>
     )
+}
+
+
+async function uploadFileToStorage(file, pathPrefix) {
+    const imageRef = ref(storage, `${pathPrefix}/${file.name + v4()}`);
+    await uploadBytes(imageRef, file);
+    return await getDownloadURL(imageRef);
 }
 
 export default AddProject

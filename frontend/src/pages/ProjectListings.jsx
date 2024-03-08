@@ -100,7 +100,7 @@ function ProjectListings() {
                         <th className="px-4 py-2">Requirements</th>
                         <th className="px-4 py-2">Manager Name</th>
                         <th className="px-4 py-2">Employee Name</th>
-                        {/* <th className="px-4 py-2">status</th> */}
+                        <th className="px-4 py-2">status</th>
                         <th className="px-4 py-2">Created At</th>
                         <th className="px-4 py-2">Assign At</th>
                         <th className="px-4 py-2">Project Deadline</th>
@@ -113,21 +113,14 @@ function ProjectListings() {
                             <td className="px-4 py-2">{(i + 1)}</td>
                             <td className="px-4 py-2">{project.projectName}</td>
                             <td className="px-4 py-2">
-                                <div
-                                    dangerouslySetInnerHTML={{
-                                        __html: replaceNewlinesWithBr(project.projectDescription),
-                                    }}
-                                />
+                                <button className="btn btn-xs"><a href={project.projectDescription} target='_blank'>Desc</a></button>
                             </td>
                             <td className="px-4 py-2">
-                                <div
-                                    dangerouslySetInnerHTML={{
-                                        __html: replaceNewlinesWithBr(project.projectRequirements),
-                                    }}
-                                />
+                                <button className="btn btn-xs"><a href={project.projectRequirements} target='_blank'>Req</a></button>
                             </td>
                             <td className="px-4 py-2">{(project.managerName) ? project.managerName : 'Not Assigned'}</td>
                             <td className="px-4 py-2">{(project.employeeName) ? project.employeeName : 'Not Assigned'}</td>
+                            <td className="px-4 py-2">{(project.status) ? project.status : 'Not Assigned'}</td>
                             <td className="px-4 py-2">
                                 {new Date(project.createdAt).toLocaleDateString()}
                             </td>

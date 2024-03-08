@@ -24,8 +24,8 @@ export const managerLogin = createAsyncThunk('manager/manager/login', async (use
     } catch (error) {
         const messageManager = (error.response
             && error.response.data
-            && error.response.data.messageManager)
-            || error.messageManager
+            && error.response.data.message)
+            || error.message
             || error.toString()
 
         return thunkAPI.rejectWithValue(messageManager);
@@ -40,44 +40,44 @@ export const registerEmployee = createAsyncThunk('manager/register/employee', as
     } catch (error) {
         const messageManager = (error.response
             && error.response.data
-            && error.response.data.messageManager)
-            || error.messageManager
+            && error.response.data.message)
+            || error.message
             || error.toString()
 
         return thunkAPI.rejectWithValue(messageManager);
     }
 })
-// // getting manager list
-// export const getEmployees = createAsyncThunk('manager/employee/getAll', async (_, thunkAPI) => {
-//     try {
-//         const token = thunkAPI.getState().manager.user.token;
-//         return await managerService.getEmployee(token);
-//     } catch (error) {
-//         const messageManager = (error.response
-//             && error.response.data
-//             && error.response.data.messageManager)
-//             || error.messageManager
-//             || error.toString()
+// getting manager list
+export const getEmployees = createAsyncThunk('manager/employee/getAll', async (_, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().manager.manager.token;
+        return await managerService.getEmployees(token);
+    } catch (error) {
+        const messageManager = (error.response
+            && error.response.data
+            && error.response.data.message)
+            || error.message
+            || error.toString()
 
-//         return thunkAPI.rejectWithValue(messageManager);
-//     }
-// })
+        return thunkAPI.rejectWithValue(messageManager);
+    }
+})
 
-// // getting employee list
-// export const delEmployee = createAsyncThunk('manager/employee/del', async (id, thunkAPI) => {
-//     try {
-//         const token = thunkAPI.getState().manager.user.token;
-//         return await managerService.delEmployee(id, token);
-//     } catch (error) {
-//         const messageManager = (error.response
-//             && error.response.data
-//             && error.response.data.messageManager)
-//             || error.messageManager
-//             || error.toString()
+// deleting employee from list
+export const delEmployee = createAsyncThunk('manager/employee/del', async (id, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().manager.manager.token;
+        return await managerService.delEmployee(id, token);
+    } catch (error) {
+        const messageManager = (error.response
+            && error.response.data
+            && error.response.data.message)
+            || error.message
+            || error.toString()
 
-//         return thunkAPI.rejectWithValue(messageManager);
-//     }
-// })
+        return thunkAPI.rejectWithValue(messageManager);
+    }
+})
 
 // for logout user 
 export const logoutManager = createAsyncThunk('manager/logout', async () => {
@@ -118,42 +118,42 @@ export const managerSlice = createSlice({
                 state.messageManager = action.payload
                 state.isErrorManager = true
             })
-            // // getting managers
-            // .addCase(getManagers.pending, (state) => {
-            //     state.isLoadingManager = true
-            // })
-            // .addCase(getManagers.fulfilled, (state, action) => {
-            //     state.isLoadingManager = false
-            //     state.isEmployee = true
-            //     state.employees = action.payload
-            // })
-            // .addCase(getManagers.rejected, (state, action) => {
-            //     state.isLoadingManager = false
-            //     state.messageManager = action.payload
-            //     state.isErrorManager = true
-            // })
-            // // delete employees
-            // .addCase(delEmployee.pending, (state) => {
-            //     state.isLoadingManager = true
-            // })
-            // .addCase(delEmployee.fulfilled, (state, action) => {
-            //     state.isLoadingManager = false
-            //     state.isDeletedEmployee = true
+            // getting employees
+            .addCase(getEmployees.pending, (state) => {
+                state.isLoadingManager = true
+            })
+            .addCase(getEmployees.fulfilled, (state, action) => {
+                state.isLoadingManager = false
+                state.isEmployee = true
+                state.employees = action.payload
+            })
+            .addCase(getEmployees.rejected, (state, action) => {
+                state.isLoadingManager = false
+                state.messageManager = action.payload
+                state.isErrorManager = true
+            })
+            // delete employees
+            .addCase(delEmployee.pending, (state) => {
+                state.isLoadingManager = true
+            })
+            .addCase(delEmployee.fulfilled, (state, action) => {
+                state.isLoadingManager = false
+                state.isDeletedEmployee = true
 
-            //     // Find the index of the deleted manager and remove it from the managers array
-            //     const managersCopy = [...state.managers];
-            //     const index = managersCopy.findIndex((manager) => manager._id === action.payload.managerId);
-            //     if (index !== -1) {
-            //         managersCopy.splice(index, 1);
-            //         state.managers = managersCopy;
-            //     }
-            // })
-            // .addCase(delEmployee.rejected, (state, action) => {
-            //     state.isLoadingManager = false
-            //     state.messageManager = action.payload
-            //     state.isErrorManager = true
-            // })
-            // login admin
+                // Find the index of the deleted employees and remove it from the employees array
+                const employeesCopy = [...state.employees];
+                const index = employeesCopy.findIndex((manager) => manager._id === action.payload.managerId);
+                if (index !== -1) {
+                    employeesCopy.splice(index, 1);
+                    state.employees = employeesCopy;
+                }
+            })
+            .addCase(delEmployee.rejected, (state, action) => {
+                state.isLoadingManager = false
+                state.messageManager = action.payload
+                state.isErrorManager = true
+            })
+            // login manager
             .addCase(managerLogin.pending, (state) => {
                 state.isLoadingManager = true
             })

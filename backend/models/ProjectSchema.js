@@ -53,6 +53,10 @@ const ProjectSchema = mongoose.Schema({
     employeeName: {
         type: String,
     },
+    status: {
+        type: String,
+        default: "Not assign to Manager"
+    },
     createdAt: {
         type: Date,
         default: Date.now

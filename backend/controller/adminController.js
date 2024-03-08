@@ -156,7 +156,7 @@ const deleteManager = asyncHandler(async (req, res) => {
 // @access  private 
 const addProject = asyncHandler(async (req, res) => {
 
-    const { projectName, projectDescription, projectRequirements, projectDeadline, managerId, managerName, employeeId, employeeName } = req.body;
+    const { projectName, projectDescription, projectRequirements, projectDeadline, managerId, managerName, employeeId, employeeName, status } = req.body;
 
     // validations
     if (!projectName || !projectDescription || !projectRequirements || !projectDeadline) {
@@ -178,8 +178,9 @@ const addProject = asyncHandler(async (req, res) => {
         projectDescription,
         projectRequirements,
         projectDeadline,
+        status,
         managerId, managerName,
-        employeeId, employeeName
+        employeeId, employeeName,
     })
 
     if (project) {
@@ -253,6 +254,7 @@ const upProject = asyncHandler(async (req, res) => {
     if (req.body.managerId) updateFields.managerId = req.body.managerId;
     if (req.body.managerName) updateFields.managerName = req.body.managerName;
     if (req.body.assignedAt) updateFields.assignedAt = req.body.assignedAt;
+    if (req.body.status) updateFields.status = req.body.status;
 
     // Perform the update
     const updatedProject = await Project.updateOne(
