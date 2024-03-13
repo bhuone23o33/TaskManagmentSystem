@@ -36,6 +36,7 @@ function AddProject() {
 
 
     const { isLoading, isError, isSuccess, message } = useSelector(state => state.project);
+    const { user } = useSelector(state => state.auth);
 
     useEffect(() => {
         if (isError) {
@@ -97,6 +98,8 @@ function AddProject() {
             setIsUploading(false); // Set uploading state to false
         }
     };
+
+
 
     if (isLoading || isUploading) {
         return <Spinner />
@@ -193,5 +196,7 @@ async function uploadFileToStorage(file, pathPrefix) {
     await uploadBytes(imageRef, file);
     return await getDownloadURL(imageRef);
 }
+
+
 
 export default AddProject

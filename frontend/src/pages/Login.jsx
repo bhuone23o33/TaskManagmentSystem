@@ -72,7 +72,6 @@ function Login() {
             email,
             password
         }
-        console.log(userData);
         if (role == 'admin') {
             dispatch(AdminLogin(userData));
         }

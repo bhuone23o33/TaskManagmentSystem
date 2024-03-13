@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 // const Admin = require('../models/adminSchema.js');
 const Manager = require('../models/ManagerSchema.js');
 const Employee = require('../models/EmployeeSchema.js');
+const Project = require('../models/ProjectSchema.js');
 // @desc   Register a employee
 // @route  /api/users
 // @access  public 
@@ -118,9 +119,30 @@ const delEmployee = asyncHandler(async (req, res) => {
 })
 
 
+// @desc   get project
+// @route  /api/admin/project/all
+// @access  private 
+const getProjects = asyncHandler(async (req, res) => {
+
+
+
+    // Get user(admin) id 
+    const manager = await Manager.findById(req.user.id);
+
+    if (!manager) {
+        throw new Error("Manager not Exist");
+    }
+
+    const projects = await Project.find({ managerId: req.user.id });
+
+    res.status(200).json(projects);
+})
+
+
 module.exports = {
     RegisterEmployee,
     LoginUser,
     getEmployees,
-    delEmployee
+    delEmployee,
+    getProjects
 }

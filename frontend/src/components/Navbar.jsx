@@ -77,7 +77,7 @@ function Navbar() {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to="/">
+                                    <Link to="/manager/project/all">
                                         View Projects
                                     </Link>
                                 </li>
@@ -136,7 +136,7 @@ function Navbar() {
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/">
+                                <Link to="/manager/project/all">
                                     View Projects
                                 </Link>
                             </li>

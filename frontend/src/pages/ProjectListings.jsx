@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 // YourComponent.js
 import { replaceNewlinesWithBr } from "../components/utils.js";
 import { toast } from 'react-toastify';
+import { storage } from '../firebase/TaskConfig.js';
 
 import Spinner from '../components/Spinner.jsx';
 
@@ -50,7 +51,10 @@ function ProjectListings() {
 
     console.log(projects);
 
-    const handleDeleteProject = (id) => {
+
+
+    const handleDeleteProject = async (id) => {
+
         const index = projects.findIndex((project) => project._id === id);
         if (index !== -1) {
             const newProjects = [...projects];
