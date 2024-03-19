@@ -3,8 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-// YourComponent.js
-import { replaceNewlinesWithBr } from "../components/utils.js";
+import { getManagerProjects, reset1 } from '../features/Projects/projectSlice.js';
 import { toast } from 'react-toastify';
 import { storage } from '../firebase/TaskConfig.js';
 
@@ -13,64 +12,57 @@ import Spinner from '../components/Spinner.jsx';
 function ManagerProjects() {
     const dispatch = useDispatch();
 
-    // const { projects, isLoading, isError, isProjDeleted, isProjects, message } = useSelector(state => state.project);
     const [localProjects, setLocalProjects] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
 
-    // useEffect(() => {
-    //     return () => {
-    //         if (isProjects) {
-    //             dispatch(reset1());
-    //         }
-    //     }
-    // }, [dispatch, isProjects])
+    const { projects, isLoading, isError, isManagerProjects, message } = useSelector(state => state.project);
+
+    useEffect(() => {
+        return () => {
+            if (isManagerProjects) {
+                dispatch(reset1());
+            }
+        }
+    }, [dispatch, isManagerProjects])
 
     // // getting project data
-    // useEffect(() => {
-    //     dispatch(getProjects());
-    // }, [dispatch]);
+    useEffect(() => {
+        dispatch(getManagerProjects());
+    }, [dispatch]);
 
     // // setting project to localProject useState
-    // useEffect(() => {
-    //     setLocalProjects(projects);
-    // }, [projects]);
+    useEffect(() => {
+        setLocalProjects(projects);
+    }, [projects]);
 
     // // if any error occured
-    // useEffect(() => {
-    //     if (isError) {
-    //         toast.error(message);
-    //     }
-    // }, [isError, message]);
-
-    // useEffect(() => {
-    //     if (isProjDeleted) {
-    //         toast.success('Project deleted!');
-    //     }
-    // }, [isProjDeleted]);
+    useEffect(() => {
+        if (isError) {
+            toast.error(message);
+        }
+    }, [isError, message]);
 
 
 
 
 
-    const handleDeleteProject = async (id) => {
 
-        // const index = projects.findIndex((project) => project._id === id);
-        // if (index !== -1) {
-        //     const newProjects = [...projects];
-        //     newProjects.splice(index, 1);
-        //     setLocalProjects(newProjects);
-        // }
-        // dispatch(delProject(id));
-    }
+
+
 
     // for searching
     const handleSearch = () => {
-        // if (searchQuery.trim()) {
-        //     const filteredProjects = projects.filter((project) => project.projectName.toLowerCase().includes(searchQuery.toLowerCase()));
-        //     setLocalProjects(filteredProjects);
-        // } else {
-        //     setLocalProjects(projects);
-        // }
+        if (searchQuery.trim()) {
+            const filteredProjects = projects.filter((project) => project.projectName.toLowerCase().includes(searchQuery.toLowerCase()));
+            setLocalProjects(filteredProjects);
+        } else {
+            setLocalProjects(projects);
+        }
+    }
+
+    //already assigned
+    const handleAlreadyAssigned = () => {
+        toast.error("Already Assigned");
     }
 
     // for search projects
@@ -78,9 +70,9 @@ function ManagerProjects() {
         handleSearch();
     }, [searchQuery]);
 
-    // if (isLoading) {
-    //     return <Spinner />
-    // }
+    if (isLoading) {
+        return <Spinner />
+    }
 
 
     return (
@@ -136,19 +128,21 @@ function ManagerProjects() {
                             <td className="px-4 py-2 flex flex-col gap-1">
                                 {(!project.employeeName) && (
                                     <Link
-                                        to="/admin/project/assign"
+                                        to="/manager/project/assign"
                                         state={{ project }}
                                         className="px-2 py-1 text-center text-xs font-bold rounded bg-blue-500 hover:bg-blue-700 text-white"
                                     >
                                         Assign
                                     </Link>
                                 )}
-                                <button
-                                    className="px-2 py-1 text-xs font-bold rounded bg-blue-500 hover:bg-blue-700 text-white"
-                                    onClick={() => handleDeleteProject(project._id)}
-                                >
-                                    Delete
-                                </button>
+                                {(project.employeeName) && (
+                                    <button
+                                        className="px-2 py-1 text-center text-xs font-bold rounded bg-blue-500  text-white"
+                                        onClick={handleAlreadyAssigned}
+                                    >
+                                        Assigned
+                                    </button>
+                                )}
                             </td>
                         </tr>
                     ))}

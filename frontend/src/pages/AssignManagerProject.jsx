@@ -4,28 +4,29 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import DatePicker from 'react-datepicker';
-import { getManagers, reset } from '../features/auth/authSlice';
-import { assigningProject, reset1 } from '../features/Projects/projectSlice';
+import { getEmployees, resetManager } from '../features/manager/managerSlice';
+import { assigningManagerProject, reset1 } from '../features/Projects/projectSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import Spinner from '../components/Spinner';
 
-function AssignProject() {
+function AssignManagerProject() {
     const location = useLocation();
     const project = location.state?.project;
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { managers, isManager, isError, message } = useSelector(state => state.auth);
+    // const { managers, isManager, isError, message } = useSelector(state => state.auth);
+    const { employees, isEmployee, isErrorManager, messageManager } = useSelector(state => state.manager);
     const { isAssign } = useSelector(state => state.project);
-    const [selectedManager, setSelectedManager] = useState(null);
+    const [selectedEmployee, setSelectedEmployee] = useState(null);
 
     useEffect(() => {
         return () => {
-            if (isManager) {
-                dispatch(reset());
+            if (isErrorManager) {
+                dispatch(resetManager());
             }
         }
-    }, [dispatch, isManager])
+    }, [dispatch, isErrorManager])
 
     useEffect(() => {
         return () => {
@@ -37,36 +38,31 @@ function AssignProject() {
 
     // getting manager data
     useEffect(() => {
-        dispatch(getManagers());
+        dispatch(getEmployees());
     }, [dispatch]);
 
 
 
-    // if any error occured
-    useEffect(() => {
-        if (isError) {
-            toast.error(message);
-        }
-    }, [isError, message]);
 
 
-    const handleManagers = (e) => {
-        const selectedManagerId = e.target.value;
-        const selectedManager = managers.find(manager => manager._id === selectedManagerId);
-        setSelectedManager(selectedManager || {});
+
+    const handleEmployees = (e) => {
+        const selectedEmployeeId = e.target.value;
+        const selectedEmployee = employees.find(employee => employee._id === selectedEmployeeId);
+        setSelectedEmployee(selectedEmployee || {});
     }
 
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const projectData = {
-            managerId: selectedManager._id,
-            managerName: selectedManager.name,
+            employeeId: selectedEmployee._id,
+            employeeName: selectedEmployee.name,
             assignedAt: new Date(),
-            status: 'Not assign to Employee'
+            status: 'Pending'
         }
-        dispatch(assigningProject([project._id, projectData]));
-        if (!isAssign) { navigate('/admin/project/all') }
+        dispatch(assigningManagerProject([project._id, projectData]));
+        if (!isAssign) { navigate('/manager/project/all') }
     }
     if (isAssign) {
         return <Spinner />
@@ -132,17 +128,17 @@ function AssignProject() {
                             <div>
                                 <label className="form-control w-full max-w-xs">
                                     <div className="label">
-                                        <span className="label-text">Assign Manager</span>
+                                        <span className="label-text">Assign Employee</span>
                                     </div>
                                     <select
-                                        id="Manager"
-                                        name="Manager"
-                                        value={selectedManager?._id || ''}
-                                        onChange={handleManagers}
+                                        id="Employee"
+                                        name="Employee"
+                                        value={selectedEmployee?._id || ''}
+                                        onChange={handleEmployees}
                                         className="select select-bordered" required>
                                         <option disabled value="">Select one</option>
-                                        {managers.length > 0 && managers.map((manager) => {
-                                            return <option key={manager._id} value={manager._id}>{manager.name}</option>
+                                        {employees.length > 0 && employees.map((employee) => {
+                                            return <option key={employee._id} value={employee._id}>{employee.name}</option>
                                         })}
                                     </select>
                                 </label>
@@ -158,4 +154,4 @@ function AssignProject() {
     )
 }
 
-export default AssignProject
+export default AssignManagerProject

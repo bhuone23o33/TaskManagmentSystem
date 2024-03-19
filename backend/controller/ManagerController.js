@@ -139,10 +139,55 @@ const getProjects = asyncHandler(async (req, res) => {
 })
 
 
+// @desc   updating Project from Listing
+// @route  /api/admin/upManager/:id
+// @access  private 
+const upProject = asyncHandler(async (req, res) => {
+    // delete the user using id in jwt
+    // res.send('delete route' + `${req.params.id}`);
+    const manager = await Manager.findById(req.user.id);
+    if (!Manager) {
+        res.status(401);
+        throw new Error('Manager not found');
+    }
+
+    // Find if project doesn't exist
+    const project = await Project.findById(req.params.id);
+    if (!project) {
+        res.status(400);
+        throw new Error('Project does not exist');
+    }
+
+    // Extract the update fields from the request body
+    const updateFields = {};
+    if (req.body.employeeId) updateFields.employeeId = req.body.employeeId;
+    if (req.body.employeeName) updateFields.employeeName = req.body.employeeName;
+    // if (req.body.assignedAt) updateFields.assignedAt = req.body.assignedAt;
+    if (req.body.status) updateFields.status = req.body.status;
+
+    // Perform the update
+    const updatedProject = await Project.updateOne(
+        { _id: req.params.id },
+        { $set: updateFields }
+    );
+
+    // Check if the update was successful
+    if (updatedProject.modifiedCount === 0) {
+        res.status(400);
+        throw new Error('Failed to update the project');
+    }
+
+    res.status(200).json({ message: 'Project updated successfully', data: updatedProject });
+
+})
+
+
+
 module.exports = {
     RegisterEmployee,
     LoginUser,
     getEmployees,
     delEmployee,
-    getProjects
+    getProjects,
+    upProject
 }

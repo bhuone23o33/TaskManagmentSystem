@@ -9,6 +9,7 @@ const initialState = {
     isError: null,
     isSuccess: null,
     isProjects: null,
+    isManagerProjects: null,
     isAssign: null,
     isProjDeleted: null,
     message: ''
@@ -37,6 +38,21 @@ export const getProjects = createAsyncThunk('project/getAll', async (_, thunkAPI
     try {
         const token = thunkAPI.getState().auth.user.token;
         return await projectService.getProjects(token);
+    } catch (error) {
+        const message = (error.response
+            && error.response.data
+            && error.response.data.message)
+            || error.message
+            || error.toString()
+
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+// getting project list
+export const getManagerProjects = createAsyncThunk('Managerproject/getAll', async (_, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().manager.manager.token;
+        return await projectService.getManagerProjects(token);
     } catch (error) {
         const message = (error.response
             && error.response.data
@@ -78,6 +94,21 @@ export const assigningProject = createAsyncThunk('auth/project/assign', async ([
         return thunkAPI.rejectWithValue(message);
     }
 })
+// assigning Project
+export const assigningManagerProject = createAsyncThunk('manager/project/assign', async ([id, projectData], thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().manager.manager.token;
+        return await projectService.assignManagerProject(id, projectData, token);
+    } catch (error) {
+        const message = (error.response
+            && error.response.data
+            && error.response.data.message)
+            || error.message
+            || error.toString()
+
+        return thunkAPI.rejectWithValue(message);
+    }
+})
 
 
 
@@ -94,6 +125,7 @@ export const projectSlice = createSlice({
             state.isSuccess = null
             state.message = ''
             state.isProjects = null
+            state.isManagerProjects = null
             state.isProjDeleted = null
             state.isAssign = null
         }
@@ -125,6 +157,19 @@ export const projectSlice = createSlice({
                 state.isError = true;
                 state.message = action.payload
             })
+            .addCase(getManagerProjects.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(getManagerProjects.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isManagerProjects = true
+                state.projects = action.payload
+            })
+            .addCase(getManagerProjects.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true;
+                state.message = action.payload
+            })
             .addCase(delProject.pending, (state) => {
                 state.isLoading = true
             })
@@ -151,6 +196,17 @@ export const projectSlice = createSlice({
                 state.isAssign = false
             })
             .addCase(assigningProject.rejected, (state, action) => {
+                state.isAssign = false
+                state.isError = true;
+                state.message = action.payload
+            })
+            .addCase(assigningManagerProject.pending, (state) => {
+                state.isAssign = true
+            })
+            .addCase(assigningManagerProject.fulfilled, (state, action) => {
+                state.isAssign = false
+            })
+            .addCase(assigningManagerProject.rejected, (state, action) => {
                 state.isAssign = false
                 state.isError = true;
                 state.message = action.payload
