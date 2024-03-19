@@ -26,6 +26,9 @@ const RegisterEmployee = asyncHandler(async (req, res) => {
         throw new Error("Manager not found");
     }
 
+    const adminId = manager.adminId;
+    const managerName = manager.name;
+
 
     // Find if admin already exist
     const employeeExists = await Employee.findOne({ email });
@@ -39,7 +42,9 @@ const RegisterEmployee = asyncHandler(async (req, res) => {
 
     // create employee
     const employee = await Employee.create({
+        adminId,
         managerId: req.user.id,
+        managerName,
         name,
         email,
         password: hashedPassword

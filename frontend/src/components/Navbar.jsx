@@ -48,7 +48,7 @@ function Navbar() {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to="/">
+                                    <Link to="/admin/employee/all">
                                         View All Employees
                                     </Link>
                                 </li>
@@ -109,7 +109,7 @@ function Navbar() {
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/">
+                                <Link to="/admin/employee/all">
                                     View All Employees
                                 </Link>
                             </li>

@@ -1,10 +1,18 @@
 const mongoose = require('mongoose');
 
 const employeeSchema = new mongoose.Schema({
+    adminId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Admin' // Reference the Admin model
+    },
     managerId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Manager' // Reference the Manager model
+    },
+    managerName: {
+        type: String,
     },
     name: {
         type: String,

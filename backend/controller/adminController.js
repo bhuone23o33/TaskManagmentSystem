@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const Admin = require('../models/adminSchema.js');
 const Manager = require('../models/ManagerSchema.js');
 const Project = require('../models/ProjectSchema.js');
+const Employee = require('../models/EmployeeSchema.js');
 // @desc   Register a user(admin)
 // @route  /api/users
 // @access  public 
@@ -134,6 +135,22 @@ const getManagers = asyncHandler(async (req, res) => {
     res.status(200).json(managers);
 })
 
+// @desc   getting all employees under this admin Listings
+// @route  /api/admin/getAllEmployee
+// @access  private 
+
+const getAllEmployee = asyncHandler(async (req, res) => {
+    // get the user using id in jwt
+    const admin = await Admin.findById(req.user.id);
+    if (!admin) {
+        res.status(401);
+        throw new Error('Admin not found');
+    }
+
+    const employees = await Employee.find({ adminId: req.user.id });
+    res.status(200).json(employees);
+})
+
 
 // @desc   deleting manager from Listing
 // @route  /api/admin/delManager/:id
@@ -149,6 +166,22 @@ const deleteManager = asyncHandler(async (req, res) => {
 
     await Manager.deleteOne({ _id: req.params.id });
     res.status(200).send('Manager Deleted');
+})
+
+// @desc   deleting manager from Listing
+// @route  /api/admin/delEmployee/:id
+// @access  private 
+const deleteEmployee = asyncHandler(async (req, res) => {
+    // delete the user using id in jwt
+    // res.send('delete route' + `${req.params.id}`);
+    const admin = await Admin.findById(req.user.id);
+    if (!admin) {
+        res.status(401);
+        throw new Error('Admin not found');
+    }
+
+    await Employee.deleteOne({ _id: req.params.id });
+    res.status(200).send('Employee Deleted');
 })
 
 // @desc   create project
@@ -283,5 +316,7 @@ module.exports = {
     addProject,
     getProjects,
     delProject,
-    upProject
+    upProject,
+    getAllEmployee,
+    deleteEmployee
 }

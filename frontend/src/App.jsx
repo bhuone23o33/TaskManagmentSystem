@@ -13,6 +13,7 @@ import RegisterEmployee from './pages/RegisterEmployee.jsx';
 import EmployeeListings from './pages/EmployeeListings.jsx';
 import ManagerProjects from './pages/ManagerProjects.jsx';
 import AssignManagerProject from './pages/AssignManagerProject.jsx';
+import AllEmployee from './pages/AllEmployee.jsx';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
@@ -28,6 +29,7 @@ function App() {
           <Route path='/user/admin/register' element={<Register />} />
           <Route path='/user/manager/register' element={<RegisterManager />} />
           <Route path='/user/manager/all' element={<ManagerListings />} />
+          <Route path='/admin/employee/all' element={<AllEmployee />} />
           <Route path='/admin/addProject' element={<AddProject />} />
           <Route path='/admin/project/all' element={<ProjectListings />} />
           <Route path='/admin/project/assign' element={<AssignProject />} />

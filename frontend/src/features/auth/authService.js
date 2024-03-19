@@ -61,6 +61,24 @@ const getManagers = async (token) => {
     return response.data;
 
 }
+// get employees
+const getAllEmployees = async (token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+
+
+    const response = await axios.get(`${API_URL}/admin/employee/all`, config);
+
+    // if (response.data) {
+    //     localStorage.setItem('manager', JSON.stringify(response.data));
+    // }
+
+    return response.data;
+
+}
 // del manager
 const delManager = async (id, token) => {
     const config = {
@@ -76,6 +94,21 @@ const delManager = async (id, token) => {
     return { managerId: id, ...response.data };
 
 }
+// del employee
+const delEmployee = async (id, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+
+
+    const response = await axios.delete(`${API_URL}/admin/delEmployee/${id}`, config);
+
+
+    return { managerId: id, ...response.data };
+
+}
 
 
 
@@ -85,7 +118,7 @@ const delManager = async (id, token) => {
 const logout = () => localStorage.removeItem('user');
 
 const authService = {
-    register, logout, adminLogin, registerManager, getManagers, delManager
+    register, logout, adminLogin, registerManager, getManagers, delManager, delEmployee, getAllEmployees
 }
 
 // admin login

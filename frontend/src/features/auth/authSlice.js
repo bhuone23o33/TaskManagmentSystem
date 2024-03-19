@@ -4,11 +4,13 @@ import authService from "./authService.js";
 
 // getting logged in user from local storage
 const user = JSON.parse(localStorage.getItem('user'));
-const manager = JSON.parse(localStorage.getItem('manager'));
 const initialState = {
     user: user ? user : null,
     isManagerRegistered: false,
     managers: [],
+    employees: [],
+    isEmployee: false,
+    isEmployeeDeleted: false,
     isManager: false,
     isDeleted: false,
     isLoading: false,
@@ -76,12 +78,42 @@ export const getManagers = createAsyncThunk('auth/manager/getAll', async (_, thu
         return thunkAPI.rejectWithValue(message);
     }
 })
+// getting manager list
+export const getAllEmployees = createAsyncThunk('auth/employee/getAll', async (_, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token;
+        return await authService.getAllEmployees(token);
+    } catch (error) {
+        const message = (error.response
+            && error.response.data
+            && error.response.data.message)
+            || error.message
+            || error.toString()
+
+        return thunkAPI.rejectWithValue(message);
+    }
+})
 
 // getting manager list
 export const delManager = createAsyncThunk('auth/manager/del', async (id, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token;
         return await authService.delManager(id, token);
+    } catch (error) {
+        const message = (error.response
+            && error.response.data
+            && error.response.data.message)
+            || error.message
+            || error.toString()
+
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+// delete employee
+export const delEmployee = createAsyncThunk('auth/employee/del', async (id, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token;
+        return await authService.delEmployee(id, token);
     } catch (error) {
         const message = (error.response
             && error.response.data
@@ -113,8 +145,11 @@ export const authSlice = createSlice({
             state.isSuccess = false
             state.isDeleted = false
             state.isManager = false
+            state.isEmployee = false
+            state.isEmployeeDeleted = false
             state.message = ''
             state.managers = {}
+            state.employees = {}
         }
     },
     extraReducers: (builder) => {
@@ -160,6 +195,20 @@ export const authSlice = createSlice({
                 state.message = action.payload
                 state.isError = true
             })
+            // getting employees
+            .addCase(getAllEmployees.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(getAllEmployees.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isEmployee = true
+                state.employees = action.payload
+            })
+            .addCase(getAllEmployees.rejected, (state, action) => {
+                state.isLoading = false
+                state.message = action.payload
+                state.isError = true
+            })
             // delete managers
             .addCase(delManager.pending, (state) => {
                 state.isLoading = true
@@ -177,6 +226,27 @@ export const authSlice = createSlice({
                 }
             })
             .addCase(delManager.rejected, (state, action) => {
+                state.isLoading = false
+                state.message = action.payload
+                state.isError = true
+            })
+            // delete employees
+            .addCase(delEmployee.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(delEmployee.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isEmployeeDeleted = true
+
+                // Find the index of the deleted employee and remove it from the employees array
+                const employeesCopy = [...state.employees];
+                const index = employeesCopy.findIndex((employee) => employee._id === action.payload.employeeId);
+                if (index !== -1) {
+                    employeesCopy.splice(index, 1);
+                    state.employees = employeesCopy;
+                }
+            })
+            .addCase(delEmployee.rejected, (state, action) => {
                 state.isLoading = false
                 state.message = action.payload
                 state.isError = true
