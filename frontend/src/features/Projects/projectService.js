@@ -45,6 +45,20 @@ const getManagerProjects = async (token) => {
     return response.data;
 
 }
+// get employee projects
+const getEmployeeProjects = async (token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+
+
+    const response = await axios.get(`${API_URL}/employee/project/all`, config);
+
+    return response.data;
+
+}
 
 // del project
 const delProject = async (id, token) => {
@@ -91,9 +105,24 @@ const assignManagerProject = async (id, projectData, token) => {
     return response.data;
 
 }
+// update project from employee
+const updateProject = async (id, projectData, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+
+
+    const response = await axios.put(`${API_URL}/employee/upProject/${id}`, projectData, config);
+
+
+    return response.data;
+
+}
 
 const projectService = {
-    createProject, getProjects, getManagerProjects, delProject, assignProject, assignManagerProject
+    createProject, getProjects, getManagerProjects, delProject, assignProject, assignManagerProject, getEmployeeProjects, updateProject
 }
 
 export default projectService;

@@ -125,13 +125,13 @@ const delEmployee = asyncHandler(async (req, res) => {
 
 
 // @desc   get project
-// @route  /api/admin/project/all
+// @route  /api/manager/project/all
 // @access  private 
 const getProjects = asyncHandler(async (req, res) => {
 
 
 
-    // Get user(admin) id 
+    // Get user(manager) id 
     const manager = await Manager.findById(req.user.id);
 
     if (!manager) {

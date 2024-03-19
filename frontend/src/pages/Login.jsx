@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import { AdminLogin, reset } from '../features/auth/authSlice.js';
 import { managerLogin, resetManager } from '../features/manager/managerSlice.js';
+import { employeeLogin, resetEmployee } from '../features/employee/employeeSlice.js';
 import { toast } from 'react-toastify';
 import Spinner from "../components/Spinner.jsx";
 
@@ -24,6 +25,13 @@ function Login() {
         isSuccessManager,
         messageManager
     } = useSelector(state => state.manager);
+    const {
+        employee,
+        isLoadingEmployee,
+        isErrorEmployee,
+        isSuccessEmployee,
+        messageEmployee
+    } = useSelector(state => state.employee);
 
     const handleChange = (event) => {
         setFormData({
@@ -33,10 +41,10 @@ function Login() {
     };
 
     useEffect(() => {
-        if (isSuccess || isSuccessManager) {
+        if (isSuccess || isSuccessManager || isSuccessEmployee) {
             toast.success('Login Successfully!')
         }
-    }, [isSuccess, isSuccessManager])
+    }, [isSuccess, isSuccessManager, isSuccessEmployee])
 
     useEffect(() => {
         if (isError) {
@@ -47,10 +55,14 @@ function Login() {
             toast.error(messageManager);
         }
 
+        if (isErrorEmployee) {
+            toast.error(messageEmployee);
+        }
+
 
 
         // redirect if success
-        if ((isSuccess || user) || (isSuccessManager || manager)) {
+        if ((isSuccess || user) || (isSuccessManager || manager) || (isSuccessEmployee || employee)) {
             navigate('/')
         }
 
@@ -58,8 +70,10 @@ function Login() {
             dispatch(reset());
         } else if (manager) {
             dispatch(resetManager());
+        } else if (employee) {
+            dispatch(resetEmployee());
         }
-    }, [isError, isSuccess, user, navigate, dispatch, message, isErrorManager, isSuccessManager, manager])
+    }, [isError, isSuccess, user, navigate, dispatch, message, isErrorManager, isSuccessManager, manager, employee, isErrorEmployee, isSuccessEmployee]);
 
     const { role, email, password } = formData;
 
@@ -79,11 +93,11 @@ function Login() {
             dispatch(managerLogin(userData));
         }
         else if (role == 'employee') {
-            // dispatch(EmployeeLogin(userData));
+            dispatch(employeeLogin(userData));
         }
     };
 
-    if (isLoading || isLoadingManager) {
+    if (isLoading || isLoadingManager || isLoadingEmployee) {
         return <Spinner />
     }
 

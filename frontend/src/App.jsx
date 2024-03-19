@@ -14,10 +14,11 @@ import EmployeeListings from './pages/EmployeeListings.jsx';
 import ManagerProjects from './pages/ManagerProjects.jsx';
 import AssignManagerProject from './pages/AssignManagerProject.jsx';
 import AllEmployee from './pages/AllEmployee.jsx';
+import EmployeeProjects from './pages/EmployeeProjects.jsx';
+import UpdateProject from './pages/UpdateProject.jsx';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
-import Footer from './components/Footer.jsx'
 function App() {
   return (
     <>
@@ -37,6 +38,8 @@ function App() {
           <Route path='/manager/employee/all' element={<EmployeeListings />} />
           <Route path='/manager/project/all' element={<ManagerProjects />} />
           <Route path='/manager/project/assign' element={<AssignManagerProject />} />
+          <Route path='/employee/project/all' element={<EmployeeProjects />} />
+          <Route path='/employee/project/updateStatus' element={<UpdateProject />} />
           {/* <Route path='/mentor/:id  ' element={<ManagerProjects />} /> */}
         </Routes>
       </Router>
