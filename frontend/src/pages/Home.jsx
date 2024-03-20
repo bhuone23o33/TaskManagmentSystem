@@ -9,7 +9,7 @@ function Home() {
             <div className="min-h-screen flex flex-col bg-white text-gray-800">
                 <div className="h-screen bg-cover bg-center flex items-center justify-center text-gray-500" style={{ backgroundImage: `url('/path/to/hero-bg.jpg')` }}>
                     <div>
-                        <h1 className="text-5xl font-bold mb-4">Welcome to Our Landing Page</h1>
+                        <h1 className="text-5xl font-bold mb-4">Welcome to TaskHandler</h1>
                         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Learn More</button>
                     </div>
                 </div>
@@ -19,20 +19,20 @@ function Home() {
                         <div className="flex flex-wrap">
                             <div className="w-full md:w-1/3 p-4">
                                 <div className="bg-white rounded-lg shadow-md p-8">
-                                    <h3 className="text-xl font-bold mb-4">Feature 1</h3>
-                                    <p className="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed commodo, velit in volutpat auctor, nisi nisi elementum nisl, ac finibus eros elit vel nibh.</p>
+                                    <h3 className="text-xl font-bold mb-4">Role-based Workflow:</h3>
+                                    <p className="text-gray-700">The system supports multiple user roles such as Administrator, Manager, and Employee. Each role has specific permissions and responsibilities in the project management workflow. The Administrator adds projects, the Manager assigns tasks to employees, and employees update project statuses.</p>
                                 </div>
                             </div>
                             <div className="w-full md:w-1/3 p-4">
                                 <div className="bg-white rounded-lg shadow-md p-8">
-                                    <h3 className="text-xl font-bold mb-4">Feature 2</h3>
-                                    <p className="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed commodo, velit in volutpat auctor, nisi nisi elementum nisl, ac finibus eros elit vel nibh.</p>
+                                    <h3 className="text-xl font-bold mb-4">Task Assignment based on Criteria:</h3>
+                                    <p className="text-gray-700"> The project facilitates efficient task assignment by allowing the Manager to assign tasks to employees based on factors like time availability and employee capability. This ensures optimal utilization of resources and timely completion of projects.</p>
                                 </div>
                             </div>
                             <div className="w-full md:w-1/3 p-4">
                                 <div className="bg-white rounded-lg shadow-md p-8">
-                                    <h3 className="text-xl font-bold mb-4">Feature 3</h3>
-                                    <p className="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed commodo, velit in volutpat auctor, nisi nisi elementum nisl, ac finibus eros elit vel nibh.</p>
+                                    <h3 className="text-xl font-bold mb-4">Comprehensive Project Tracking:</h3>
+                                    <p className="text-gray-700">Users can track the progress of projects and tasks within the system. Administrators have an overview of all ongoing projects, Managers can monitor task assignments and employee workload, while Employees can update task statuses upon completion, providing a comprehensive view of project progress.</p>
                                 </div>
                             </div>
                         </div>
