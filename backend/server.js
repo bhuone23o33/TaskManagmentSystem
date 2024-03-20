@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: false }));
 
 
 app.get('/', (req, res) => {
-    res.send('chut')
+    res.send('Hello World')
 })
 
 // routes for admin
