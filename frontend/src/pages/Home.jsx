@@ -9,7 +9,7 @@ function Home() {
             <div className="min-h-screen flex flex-col bg-white text-gray-800">
                 <div className="h-screen bg-cover bg-center flex items-center justify-center text-gray-500" style={{ backgroundImage: `url('/path/to/hero-bg.jpg')` }}>
                     <div>
-                        <h1 className="text-5xl font-bold mb-4">Welcome to TaskHandler</h1>
+                        <h1 className="text-5xl font-bold mb-4">Welcome to Workify</h1>
                         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Learn More</button>
                     </div>
                 </div>

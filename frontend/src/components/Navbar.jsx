@@ -107,7 +107,7 @@ function Navbar() {
                     )}
                     <div className="btn btn-ghost text-xl bg-base-300 hover:bg-base-300">
                         <Link to="/">
-                            TaskManager
+                            Workify
                         </Link>
                     </div>
                 </div>
